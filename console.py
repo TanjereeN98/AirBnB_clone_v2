@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import re
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -19,16 +20,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -118,28 +119,44 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
+
         args = args.split()
+
         if args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
         new_instance = HBNBCommand.classes[args[0]]()
-        for item in args[1:]:
-            key, value = item.split('=')
-            if value.isdigit():
-                new_value = int(value)
-            else:
-                try:
-                    new_value = float(value)
-                except ValueError:
-                    if '"' in value:
-                        new_value = value.strip('"').replace('_', ' ')
-                    else:
-                        continue
-            setattr(new_instance, key, new_value)
+
+        for arg in args[1:]:
+            attr, value = None, None
+
+            string_match = re.search(r'^(.+)="(.*)"$', arg)
+
+            if string_match is not None:
+                attr = string_match.group(1)
+                value = string_match.group(2) \
+                    .replace('_', ' ') \
+                    .replace('\\"', '"')
+
+            integer_match = re.search(r'^(.+)=(-?[0-9]+)$', arg)
+
+            if integer_match is not None:
+                attr = integer_match.group(1)
+                value = int(integer_match.group(2))
+
+            float_match = re.search(r'^(.+)=(-?[0-9]+\.[0-9]+)$', arg)
+
+            if float_match is not None:
+                attr = float_match.group(1)
+                value = float(float_match.group(2))
+
+            if attr is not None:
+                setattr(new_instance, attr, value)
 
         new_instance.save()
         print(new_instance.id)
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -202,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del (storage.all()[key])
+            del storage.all()[key]
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -214,22 +231,21 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        all_list = []
+        print_list = []
+
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
-                print(" class doesn't exist ")
+                print("** class doesn't exist **")
                 return
-            else:
-                objs = storage.all(HBNBCommand.classes[args])
+            for k, v in storage.all().items():
+                if k.split('.')[0] == args:
+                    print_list.append(str(v))
         else:
-            objs = storage.all()
+            for k, v in storage.all().items():
+                print_list.append(str(v))
 
-        for v in objs.values():
-            all_list.append(str(v))
-        print("[", end="")
-        print(", ".join(all_list), end="")
-        print("]")
+        print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
