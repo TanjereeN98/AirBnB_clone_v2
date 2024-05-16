@@ -28,7 +28,7 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         run(f'mkdir -p /data/web_static/releases/{file_name}/')
         print(f'{file_name}')
-        run(f'tar -xvzf /tmp/{file_name}.tgz \
+        run(f'tar -xzf /tmp/{file_name}.tgz \
             -C /data/web_static/releases/{file_name}/')
         print(f'{file_name}')
         run(f'rm /tmp/{file_name}.tgz')
