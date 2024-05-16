@@ -43,3 +43,38 @@
 | 9. DBStorage - Review | [SOON](./) |
 | 10. DBStorage - Amenity... and BOOM! | [SOON](./) |
 
+# Project: 0x03. AirBnB clone - Deploy static
+
+## Resources
+
+#### Read or watch:
+
+* [How to use Fabric](https://intranet.alxswe.com/rltoken/O0PSIn8xJeyeKZadiQCwDQ)
+* [How to use Fabric in Python](https://intranet.alxswe.com/rltoken/ExX8laA65oUjSH8BuEEoeQ)
+* [Fabric and command line options](https://intranet.alxswe.com/rltoken/RsyBHJIhoVBhOcQN-xP4cg)
+* [CI/CD concept page](https://intranet.alxswe.com/rltoken/M_3lKmMAGA2KWujegl-ibA)
+* [Nginx configuration for beginners](https://intranet.alxswe.com/rltoken/Ik7Ax-XDGGPZ__BRN2MK5g)
+* [Difference between root and alias on NGINX](https://intranet.alxswe.com/rltoken/jgPdZF4sWxGLhs7uhYOONw)
+* [Fabric for Python 3](https://intranet.alxswe.com/rltoken/ljadvnqOr21Gy_UsVRIUPQ)
+* [Fabric Documentation](https://intranet.alxswe.com/rltoken/iVwVTXoFjfHxJMnL_JlSpg)
+## Learning Objectives
+
+### General
+
+* What is Fabric
+* How to deploy code to a server easily
+* What is a <code>tgz</code> archive
+* How to execute Fabric command locally
+* How to execute Fabric command remotely
+* How to transfer files with Fabric
+* How to manage Nginx configuration
+* What is the difference between <code>root</code> and <code>alias</code> in a Nginx configuration
+## Tasks
+
+| Task | File |
+| ---- | ---- |
+| 0. Prepare your web servers | [SOON](./) |
+| 1. Compress before sending | [SOON](./) |
+| 2. Deploy archive! | [SOON](./) |
+| 3. Full deployment | [SOON](./) |
+
