@@ -1,37 +1,39 @@
 #!/usr/bin/python3
-"""script to fetch states list from storage"""
-from flask import Flask, render_template
+"""script that starts a Flask web application"""
+from flask import Flask, render_template, redirect, url_for
+
 from models import storage
 from models.state import State
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
+
+
+@app.route('/states')
+def states():
+    """Get all state data"""
+    data = storage.all(State)
+    return render_template("9-states.html",
+                           states=data)
+
+
+@app.route('/states/<id>')
+def states_by_id(id):
+    obj = None
+    notfound = True
+    for state in storage.all(State).values():
+        if state.id == id:
+            obj = state
+            notfound = False
+            break
+    return render_template("9-states.html", id=id,
+                           state=obj, notfound=notfound)
 
 
 @app.teardown_appcontext
-def teardown(exc):
-    """close the session after each request"""
+def terminate(exc):
+    """Close SQLAlchemy session"""
     storage.close()
-
-
-@app.route('/states', strict_slashes=False)
-def states():
-    """display a HTML page for states"""
-    data = storage.all(State).values()
-    return render_template("9-states.html", states=data)
-
-
-@app.route('/states/<id>', strict_slashes=False)
-def states_id(id):
-    """display a HTML page for specific state"""
-    data = storage.all(State)
-    notfound_flag = True
-    for state in data.values():
-        if state.id == id:
-            state_obj = state
-            notfound_flag = False
-            break
-    return render_template("9-states.html", id=id,
-                           notfound_flag=notfound_flag, state=state_obj)
 
 
 if __name__ == '__main__':
